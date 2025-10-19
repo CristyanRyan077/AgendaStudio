@@ -6,34 +6,34 @@ namespace AgendaApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CriancasController : ControllerBase
+    public class ServicosController : ControllerBase
     {
-        private readonly ICriancaService _service;
-        public CriancasController(ICriancaService service) => _service = service;
+        private readonly IServicoService _service;
+        public ServicosController(IServicoService service) => _service = service;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CriancaDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ServicoDto>>> GetAll()
         {
             var list = await _service.GetAllAsync();
             return Ok(list);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<CriancaDto>> GetById(int id)
+        public async Task<ActionResult<ServicoDto>> GetById(int id)
         {
             var item = await _service.GetByIdAsync(id);
             return Ok(item);
         }
 
         [HttpPost]
-        public async Task<ActionResult<CriancaDto>> Create(CriancaCreateDto dto)
+        public async Task<ActionResult<ServicoDto>> Create(ServicoCreateDto dto)
         {
             var novo = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = novo.Id }, novo);
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<CriancaDto>> Update(int id, CriancaUpdateDto dto)
+        public async Task<ActionResult<ServicoDto>> Update(int id, ServicoUpdateDto dto)
         {
             var atualizado = await _service.UpdateAsync(id, dto);
             return Ok(atualizado);

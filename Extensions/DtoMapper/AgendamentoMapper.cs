@@ -25,6 +25,8 @@ namespace AgendaApi.Extensions.DtoMapper
             Id = entity.Id,
             ClienteId = entity.ClienteId,
             CriancaId = entity.CriancaId,
+            ServicoId = entity.ServicoId,
+            PacoteId = entity.PacoteId,
             Valor = entity.Valor,
             Data = entity.Data,
             Horario = entity.Horario,
