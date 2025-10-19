@@ -1,4 +1,4 @@
-using AgendaApi.Application.Services;
+﻿using AgendaApi.Application.Services;
 using AgendaApi.Extensions;
 using AgendaApi.Infra;
 using AgendaApi.Infra.Interfaces;
@@ -48,7 +48,6 @@ builder.Services.AddCors(opt =>
                 "http://localhost",
                 "http://localhost:5173",
                 "http://localhost:5000",
-                "https://localhost:5001",
                 "http://10.0.2.2:5173",  // web local via emulador
                 "http://10.0.2.2:5000",  // API via emulador Android
                 "http://192.168.30.112"
@@ -62,7 +61,20 @@ builder.Services.AddCors(opt =>
 });
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AgendaContext>();
+    try
+    {
+        db.Database.CanConnect();
+        Console.WriteLine("✅ Conexão com o banco bem-sucedida.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("❌ Erro ao conectar com o banco:");
+        Console.WriteLine(ex.Message);
+    }
+}
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -75,8 +87,9 @@ app.UseSwaggerUI(c =>
 {
     app.MapOpenApi();
 } */
-app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(CorsPolicy);
 app.UseAuthorization();
 app.MapControllers();

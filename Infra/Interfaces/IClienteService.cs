@@ -5,6 +5,7 @@ namespace AgendaApi.Infra.Interfaces
 {
     public interface IClienteService
     {
+        Task<Cliente> GetClienteOrThrowAsync(int id);
         Task<IEnumerable<ClienteDto>> GetAllAsync();
         Task<ClienteDto?> GetByIdAsync(int id);
         Task<ClienteDto> CreateAsync(ClienteCreateDto dto);

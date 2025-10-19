@@ -6,10 +6,12 @@ namespace AgendaApi.Extensions
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        private readonly IHostEnvironment _env;
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
         public async Task InvokeAsync(HttpContext context)
         {
@@ -31,11 +33,16 @@ namespace AgendaApi.Extensions
                     _ => (int)HttpStatusCode.InternalServerError
                 };
 
-                await context.Response.WriteAsJsonAsync(new
+                var response = new
                 {
-                    error = ex.Message,
-                    status = context.Response.StatusCode
-                });
+                    status = context.Response.StatusCode,
+                    message = context.Response.StatusCode == (int)HttpStatusCode.InternalServerError && !_env.IsDevelopment()
+                     ? "Ocorreu um erro interno no servidor."
+                     : ex.Message,
+                    errorType = ex.GetType().Name
+                };
+
+                await context.Response.WriteAsJsonAsync(response);
             }
         }
     }

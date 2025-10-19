@@ -3,6 +3,7 @@ using AgendaApi.Extensions;
 using AgendaApi.Extensions.DtoMapper;
 using AgendaApi.Infra.Interfaces;
 using AgendaApi.Infra.Repositories;
+using AgendaApi.Models;
 
 namespace AgendaApi.Application.Services
 {
@@ -10,6 +11,12 @@ namespace AgendaApi.Application.Services
     {
         private readonly IClienteRepository _repository;
         public ClienteService(IClienteRepository repository) => _repository = repository;
+
+        public async Task<Cliente> GetClienteOrThrowAsync(int id)
+        {
+            return await _repository.GetByIdAsync(id)
+                ?? throw new NotFoundException($"Cliente com Id {id} não encontrado.");
+        }
         public async Task<IEnumerable<ClienteDto>> GetAllAsync()
         {
             var clientes = await _repository.GetAllAsync();
@@ -18,7 +25,7 @@ namespace AgendaApi.Application.Services
 
         public async Task<ClienteDto?> GetByIdAsync(int id)
         {
-            var cliente = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"cliente com Id {id} não encontrado.");
+            var cliente = await GetClienteOrThrowAsync(id);
             return cliente.ToDto();
         }
 
@@ -31,7 +38,7 @@ namespace AgendaApi.Application.Services
 
         public async Task<ClienteDto?> UpdateAsync(int id, ClienteUpdateDto dto)
         {
-            var cliente = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"cliente com Id {id} não encontrado.");
+            var cliente = await GetClienteOrThrowAsync(id);
             cliente.UpdateEntity(dto);
             await _repository.UpdateAsync(cliente);
 
@@ -41,7 +48,7 @@ namespace AgendaApi.Application.Services
         public async Task<bool> DeleteAsync(int id)
         {
 
-            var cliente = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"cliente com Id {id} não encontrado.");
+            var cliente = await GetClienteOrThrowAsync(id);
             await _repository.DeleteAsync(cliente.Id);
             return true;
         }

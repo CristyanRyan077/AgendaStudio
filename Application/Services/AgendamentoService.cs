@@ -15,6 +15,11 @@ namespace AgendaApi.Services
         {
             _repository = repository;
         }
+        public async Task<Agendamento> GetAgendamentoOrThrowAsync(int id)
+        {
+            return await _repository.GetByIdAsync(id)
+                ?? throw new NotFoundException($"Agendamento com Id {id} não encontrado.");
+        }
 
         public async Task<IEnumerable<AgendamentoDto>> GetAllAsync()
         {
@@ -24,7 +29,7 @@ namespace AgendaApi.Services
 
         public async Task<AgendamentoDto?> GetByIdAsync(int id)
         {
-            var agendamento = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"Agendamento com Id {id} não encontrado.");
+            var agendamento = await GetAgendamentoOrThrowAsync(id);
             return agendamento.ToDto();
         }
 
@@ -37,7 +42,7 @@ namespace AgendaApi.Services
 
         public async Task<AgendamentoDto?> UpdateAsync(int id, AgendamentoUpdateDto dto)
         {
-            var agendamento = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"Agendamento com Id {id} não encontrado.");
+            var agendamento = await GetAgendamentoOrThrowAsync(id);
             agendamento.UpdateEntity(dto);
             await _repository.UpdateAsync(agendamento);
 
@@ -46,8 +51,8 @@ namespace AgendaApi.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
-             
-            var agendamento = await _repository.GetByIdAsync(id) ?? throw new NotFoundException($"Agendamento com Id {id} não encontrado.");
+
+            var agendamento = await GetAgendamentoOrThrowAsync(id);
             await _repository.DeleteAsync(agendamento.Id);
             return true;
         }
