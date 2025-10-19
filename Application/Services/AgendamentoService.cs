@@ -1,8 +1,8 @@
-﻿using AgendaApi.Domain.DTOs;
-using AgendaApi.Extensions;
+﻿using AgendaApi.Extensions;
 using AgendaApi.Extensions.DtoMapper;
 using AgendaApi.Interfaces;
 using AgendaApi.Models;
+using AgendaShared.DTOs;
 using Microsoft.EntityFrameworkCore;
 
 namespace AgendaApi.Services

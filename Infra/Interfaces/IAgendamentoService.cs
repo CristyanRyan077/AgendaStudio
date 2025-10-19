@@ -1,5 +1,5 @@
-﻿using AgendaApi.Domain.DTOs;
-using AgendaApi.Models;
+﻿using AgendaApi.Models;
+using AgendaShared.DTOs;
 
 namespace AgendaApi.Interfaces
 {

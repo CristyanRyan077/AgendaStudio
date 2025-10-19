@@ -1,7 +1,6 @@
-﻿
-using AgendaApi.Domain.DTOs;
-using AgendaApi.Interfaces;
+﻿using AgendaApi.Interfaces;
 using AgendaApi.Models;
+using AgendaShared.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
